@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+jupyter = "*"
+notebook = "*"
+bs4 = "*"
+pandas = "*"
+lxml = "*"
+unidecode = "*"
+sqlalchemy = "*"
+psycopg2 = "*"
+tqdm = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
+python_full_version = "3.11.4"
