@@ -13,6 +13,7 @@ unidecode = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
 tqdm = "*"
+requests = "*"
 
 [dev-packages]
 
