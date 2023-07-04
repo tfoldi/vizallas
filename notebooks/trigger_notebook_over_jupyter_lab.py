@@ -16,19 +16,19 @@ notebook_path = "/Vizallas.ipynb"
 # Either http or https
 protocol = "http"
 # Jupyter server address and port
-base = "localhost:8888"
+jupyter_server = "localhost:8888"
 headers = {"Authorization": f"Token {os.environ['JUPYTER_TOKEN']}"}
 
 # Create a kernel
-url = f"{protocol}://{base}/api/kernels"
+url = f"{protocol}://{jupyter_server}/api/kernels"
 print("Creating a new kernel")
-response = requests.post(url, headers=headers)
-kernel = json.loads(response.text)
+with requests.post(url, headers=headers) as response:
+    kernel = json.loads(response.text)
 
 # Load the notebook and get the code of each cell
-url = f"{protocol}://{base}/api/contents{notebook_path}"
-response = requests.get(url, headers=headers)
-file = json.loads(response.text)
+url = f"{protocol}://{jupyter_server}/api/contents{notebook_path}"
+with requests.post(url, headers=headers) as response:
+    file = json.loads(response.text)
 # filter out non-code cells like markdown
 code = [
     c["source"]
@@ -38,7 +38,7 @@ code = [
 
 # Execution request/reply is done on websockets channels
 ws = create_connection(
-    f"{'ws' if protocol == 'http' else 'wss'}://{base}/api/kernels/{kernel['id']}/channels",
+    f"{'ws' if protocol == 'http' else 'wss'}://{jupyter_server}/api/kernels/{kernel['id']}/channels",
     header=headers,
 )
 
@@ -55,13 +55,12 @@ def send_execute_request(code):
         "version": "5.0",
     }
     msg = {"header": hdr, "parent_header": hdr, "metadata": {}, "content": content}
-    pprint(code)
     return msg
 
 
 print("Sending execution requests for each cell")
 for c in code:
-    ws.send(json.dumps(send_execute_request(c)))
+    ws.send(json.dump(send_execute_request(c)))
 
 code_blocks_to_execute = len(code)
 
@@ -74,9 +73,10 @@ while code_blocks_to_execute > 0:
     except WebSocketTimeoutException as _e:
         pprint(_e)
         break
-    print(f"Received message of type {msg_type} with text {rsp['content'].get('text')}")
+    print(
+        f"Received message of type {msg_type} with text {rsp['content'].get('text','')}"
+    )
 
-    pprint(rsp)
     if (
         msg_type == "execute_reply"
         and rsp["metadata"].get("status") == "ok"
@@ -89,7 +89,6 @@ print("Processing finished. Closing websocket connection")
 ws.close()
 
 # Delete the kernel
-pprint(kernel)
 print("Deleting kernel")
-url = f"{protocol}://{base}/api/kernels/{kernel['id']}"
+url = f"{protocol}://{jupyter_server}/api/kernels/{kernel['id']}"
 response = requests.delete(url, headers=headers)
