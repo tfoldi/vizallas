@@ -52,7 +52,7 @@ cloud_run = pulumi_gcp.cloudrun.Service(
                     image="gcr.io/cloudrun/hello",
                     envs=[
                         ServiceTemplateSpecContainerEnvArgs(
-                            name="DATABASE_URL",
+                            name="PG_URL",
                             value=sql_instance_url,
                         )
                     ],
