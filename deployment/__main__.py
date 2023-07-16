@@ -66,7 +66,7 @@ cloud_run = pulumi_gcp.cloudrun.Service(
                             value=sql_instance_url,
                         ),
                         ServiceTemplateSpecContainerEnvArgs(
-                            name="JUPTER_TOKEN", value=config.get("jupyter_token")
+                            name="JUPYTER_TOKEN", value=config.get("jupyter-token")
                         ),
                     ],
                     ports=[
