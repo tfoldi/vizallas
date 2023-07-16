@@ -1,0 +1,10 @@
+{
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "python.analysis.extraPaths": ["./lib"],
+    "prettier.semi": false,
+}

@@ -15,3 +15,12 @@ template:
     db-password:
       description: Password used in Cloud SQL database
       secret: true
+    use_cloud_sql:
+      description: Whether to use Cloud SQL or not
+      default: false
+    db-url:
+      description: Database URL
+      secret: true
+    jupyter-token:
+      description: Jupyter token
+      secret: true
