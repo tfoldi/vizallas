@@ -12,16 +12,20 @@ struct HourlyDataModel: Encodable, Decodable, Identifiable {
     let id: String
     let gaugingStation: String
     let waterflow: String
+    let waterLevel: Float?
+    let diffLastWeekAvgWaterLevel: Float?
     
     
     enum CodingKeys: String, CodingKey {
         case id
         case gaugingStation = "gauging_station"
         case waterflow
+        case waterLevel = "water_level"
+        case diffLastWeekAvgWaterLevel = "diff_last_week_avg_water_level"
     }
 }
 
-struct HourlyDataListModel: RandomAccessCollection {
+class HourlyDataListModel: RandomAccessCollection, ObservableObject {
     subscript(position: Array<HourlyDataModel>.Index) -> HourlyDataModel {
         get {
             return hourlyData[position]

@@ -40,13 +40,14 @@ struct ContentView: View {
                     ForEach(filteredResponse.sectionTitles, id: \.self) { section in
                         Section(header: Text(section)) {
                             ForEach(filteredResponse.items(for: section)) { item in
-                                HStack {
-                                    Text(item.gaugingStation)
-                                    Spacer()
+                                GaugingStationCellView(item: item)
+//                                HStack {
+//                                    Text(item.gaugingStation)
+//                                    Spacer()
 //                                    FavoriteButton(isFavorite: false) {
 //                                        toggleFavorite(for: item)
 //                                    }
-                                }
+//                                }
                                 
                             }
                         }
@@ -79,12 +80,10 @@ struct ContentView: View {
                 .onAppear {
                     fetchData() // Fetch the data and assign it to the response object
                 }
-                //            Image(systemName: "globe")
-                //                .imageScale(.large)
-                //                .foregroundColor(.accentColor)
-                //            Text("Hello, world!")
+
             }
-            .padding()
+//            .padding()
+            .edgesIgnoringSafeArea(Edge.Set(.bottom))
         }
     }
     
@@ -97,7 +96,7 @@ struct ContentView: View {
         Task {
             do {
                 self.response = try await supabase.database
-                    .from("gauging_stations")
+                    .from("gauging_stations_v")
                     .select() // keep it empty for all, else specify returned data
                     .execute()
                     .value
