@@ -10,7 +10,7 @@ import SwiftUI
 
 struct GaugingStationCellView: View {
     
-    let item: HourlyDataModel
+    let item: GaugingStationModel
     
     var body: some View {
         return HStack {

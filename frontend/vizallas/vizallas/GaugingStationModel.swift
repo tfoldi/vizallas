@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct HourlyDataModel: Encodable, Decodable, Identifiable {
+struct GaugingStationModel: Encodable, Decodable, Identifiable {
     let id: String
     let gaugingStation: String
     let waterflow: String
@@ -25,41 +25,41 @@ struct HourlyDataModel: Encodable, Decodable, Identifiable {
     }
 }
 
-class HourlyDataListModel: RandomAccessCollection, ObservableObject {
-    subscript(position: Array<HourlyDataModel>.Index) -> HourlyDataModel {
+class GaugingStationListModel: RandomAccessCollection, ObservableObject {
+    subscript(position: Array<GaugingStationModel>.Index) -> GaugingStationModel {
         get {
-            return hourlyData[position]
+            return gaugingStationData[position]
         }
     }
     
     public subscript(bounds: Range<Index>) -> SubSequence { fatalError() }
 
     
-    var endIndex: Array<HourlyDataModel>.Index {
-        hourlyData.endIndex
+    var endIndex: Array<GaugingStationModel>.Index {
+        gaugingStationData.endIndex
     }
     
 
-    private var hourlyData: [HourlyDataModel] = []
+    private var gaugingStationData: [GaugingStationModel] = []
     
-    typealias Element = HourlyDataModel
+    typealias Element = GaugingStationModel
     
-    typealias Index = Array<HourlyDataModel>.Index
+    typealias Index = Array<GaugingStationModel>.Index
     
-    typealias SubSequence = Array<HourlyDataModel>.SubSequence
+    typealias SubSequence = Array<GaugingStationModel>.SubSequence
     
-    typealias Indices = Array<HourlyDataModel>.Indices
+    typealias Indices = Array<GaugingStationModel>.Indices
     
     
-    var startIndex: Array<HourlyDataModel>.Index {
-        hourlyData.startIndex
+    var startIndex: Array<GaugingStationModel>.Index {
+        gaugingStationData.startIndex
     }
     
 
-    var sections: [String: [HourlyDataModel]]
+    var sections: [String: [GaugingStationModel]]
     
-    init(data: [HourlyDataModel]) {
-        hourlyData = data
+    init(data: [GaugingStationModel]) {
+        gaugingStationData = data
         sections = Dictionary(grouping: data, by: { $0.waterflow })
     }
     
@@ -67,7 +67,7 @@ class HourlyDataListModel: RandomAccessCollection, ObservableObject {
         return sections.keys.sorted()
     }
     
-    func items(for section: String) -> [HourlyDataModel] {
+    func items(for section: String) -> [GaugingStationModel] {
         let response = sections[section] ?? []
         let sortedResponse = response.sorted { $0.gaugingStation.localizedCaseInsensitiveCompare($1.gaugingStation) == .orderedAscending }
         

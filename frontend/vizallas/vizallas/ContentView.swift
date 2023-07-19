@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var response: [HourlyDataModel] = []
+    @State private var response: [GaugingStationModel] = []
     @State private var searchText: String = ""
     @State private var isHomeActive = false
 
     
-    var filteredResponse: HourlyDataListModel {
+    var filteredResponse: GaugingStationListModel {
         
         if searchText.isEmpty {
-            return HourlyDataListModel(data: response)
+            return GaugingStationListModel(data: response)
         } else {
-            return HourlyDataListModel(data:  response.filter {
+            return GaugingStationListModel(data:  response.filter {
                 compareDiacriticInsensitive(base: $0.gaugingStation, searchText: searchText) ||
                 compareDiacriticInsensitive(base: $0.waterflow, searchText: searchText)
             })
@@ -87,7 +87,7 @@ struct ContentView: View {
         }
     }
     
-    private func toggleFavorite(for item: HourlyDataModel) {
+    private func toggleFavorite(for item: GaugingStationModel) {
         // Toggle the favorite state for the item
         //item.isFavorite.toggle()
     }
