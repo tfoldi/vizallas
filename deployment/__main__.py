@@ -1,6 +1,7 @@
 import pulumi
 import pulumi_gcp
 from pulumi import Output, Config
+import pulumi_docker as docker
 from pulumi_gcp.cloudrun import (
     ServiceTemplateMetadataArgs,
     ServiceTemplateSpecContainerEnvArgs,
@@ -49,6 +50,17 @@ else:
     service_annotations = {}
     sql_instance_url = config.require("db-url")
 
+image = docker.Image(
+    f"vizallas-image",
+    build=docker.DockerBuildArgs(
+        context=f"../",
+        dockerfile=f"notebooks/Dockerfile",
+        args={"--platform": "linux/amd64"},
+        platform="linux/amd64",
+    ),
+    image_name=f"gcr.io/{pulumi.Config('gcp').get('project')}/vizallas-notebooks",
+)
+
 cloud_run = pulumi_gcp.cloudrun.Service(
     "vizallas-notebook-service",
     location=Config("gcp").require("region"),
@@ -57,9 +69,10 @@ cloud_run = pulumi_gcp.cloudrun.Service(
             annotations=service_annotations,
         ),
         spec=pulumi_gcp.cloudrun.ServiceTemplateSpecArgs(
+            timeout_seconds=600,
             containers=[
                 pulumi_gcp.cloudrun.ServiceTemplateSpecContainerArgs(
-                    image="tfoldi/vizallas-notebooks",
+                    image=image.repo_digest,
                     envs=[
                         ServiceTemplateSpecContainerEnvArgs(
                             name="PG_URL",
@@ -100,3 +113,5 @@ invoker = pulumi_gcp.cloudrun.IamMember(
 if config.get_bool("use_cloud_sql"):
     pulumi.export("pgsql_instance_name", cloud_sql_instance.name)
 pulumi.export("cloud_run_url", cloud_run.statuses[0].url)
+pulumi.export("vizallas_notebook_image", image.image_name)
+pulumi.export("vizallas_notebook_repo", image.repo_digest)
