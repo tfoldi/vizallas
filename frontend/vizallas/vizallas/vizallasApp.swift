@@ -13,7 +13,7 @@ import Supabase
 struct vizallasApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GaugingStationView()
         }
     }
 }

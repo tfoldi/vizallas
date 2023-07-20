@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2E9656482A667EAC0032CF4F /* vizallasApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656472A667EAC0032CF4F /* vizallasApp.swift */; };
-		2E96564A2A667EAC0032CF4F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656492A667EAC0032CF4F /* ContentView.swift */; };
+		2E96564A2A667EAC0032CF4F /* GaugingStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656492A667EAC0032CF4F /* GaugingStationView.swift */; };
 		2E96564C2A667EAE0032CF4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E96564B2A667EAE0032CF4F /* Assets.xcassets */; };
 		2E96564F2A667EAE0032CF4F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E96564E2A667EAE0032CF4F /* Preview Assets.xcassets */; };
 		2E9656592A667EAE0032CF4F /* vizallasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656582A667EAE0032CF4F /* vizallasTests.swift */; };
@@ -16,9 +16,11 @@
 		2E9656652A667EAE0032CF4F /* vizallasUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656642A667EAE0032CF4F /* vizallasUITestsLaunchTests.swift */; };
 		2E9656732A670E400032CF4F /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 2E9656722A670E400032CF4F /* Supabase */; };
 		2E9656752A6710160032CF4F /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656742A6710160032CF4F /* Secrets.swift */; };
-		2E9656772A6722BF0032CF4F /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656762A6722BF0032CF4F /* Models.swift */; };
+		2E9656772A6722BF0032CF4F /* GaugingStationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656762A6722BF0032CF4F /* GaugingStationModel.swift */; };
 		2E9656792A672DCD0032CF4F /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656782A672DCD0032CF4F /* Utils.swift */; };
 		2E96567B2A67B37F0032CF4F /* _Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E96567A2A67B37F0032CF4F /* _Secrets.swift */; };
+		2E96567D2A67B6DC0032CF4F /* GaugingStationCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E96567C2A67B6DC0032CF4F /* GaugingStationCellView.swift */; };
+		2E96567F2A67DC410032CF4F /* OtherViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E96567E2A67DC410032CF4F /* OtherViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,7 +43,7 @@
 /* Begin PBXFileReference section */
 		2E9656442A667EAC0032CF4F /* vizallas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vizallas.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E9656472A667EAC0032CF4F /* vizallasApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vizallasApp.swift; sourceTree = "<group>"; };
-		2E9656492A667EAC0032CF4F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2E9656492A667EAC0032CF4F /* GaugingStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaugingStationView.swift; sourceTree = "<group>"; };
 		2E96564B2A667EAE0032CF4F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E96564E2A667EAE0032CF4F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2E9656542A667EAE0032CF4F /* vizallasTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = vizallasTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,9 +52,11 @@
 		2E9656622A667EAE0032CF4F /* vizallasUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vizallasUITests.swift; sourceTree = "<group>"; };
 		2E9656642A667EAE0032CF4F /* vizallasUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vizallasUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		2E9656742A6710160032CF4F /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
-		2E9656762A6722BF0032CF4F /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		2E9656762A6722BF0032CF4F /* GaugingStationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaugingStationModel.swift; sourceTree = "<group>"; };
 		2E9656782A672DCD0032CF4F /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		2E96567A2A67B37F0032CF4F /* _Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _Secrets.swift; sourceTree = "<group>"; };
+		2E96567C2A67B6DC0032CF4F /* GaugingStationCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaugingStationCellView.swift; sourceTree = "<group>"; };
+		2E96567E2A67DC410032CF4F /* OtherViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherViews.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,11 +109,13 @@
 			isa = PBXGroup;
 			children = (
 				2E9656472A667EAC0032CF4F /* vizallasApp.swift */,
-				2E9656492A667EAC0032CF4F /* ContentView.swift */,
+				2E9656492A667EAC0032CF4F /* GaugingStationView.swift */,
+				2E96567C2A67B6DC0032CF4F /* GaugingStationCellView.swift */,
+				2E96567E2A67DC410032CF4F /* OtherViews.swift */,
 				2E96564B2A667EAE0032CF4F /* Assets.xcassets */,
 				2E96564D2A667EAE0032CF4F /* Preview Content */,
 				2E9656742A6710160032CF4F /* Secrets.swift */,
-				2E9656762A6722BF0032CF4F /* Models.swift */,
+				2E9656762A6722BF0032CF4F /* GaugingStationModel.swift */,
 				2E9656782A672DCD0032CF4F /* Utils.swift */,
 				2E96567A2A67B37F0032CF4F /* _Secrets.swift */,
 			);
@@ -279,10 +285,12 @@
 			files = (
 				2E9656792A672DCD0032CF4F /* Utils.swift in Sources */,
 				2E96567B2A67B37F0032CF4F /* _Secrets.swift in Sources */,
-				2E96564A2A667EAC0032CF4F /* ContentView.swift in Sources */,
+				2E96564A2A667EAC0032CF4F /* GaugingStationView.swift in Sources */,
 				2E9656752A6710160032CF4F /* Secrets.swift in Sources */,
 				2E9656482A667EAC0032CF4F /* vizallasApp.swift in Sources */,
-				2E9656772A6722BF0032CF4F /* Models.swift in Sources */,
+				2E96567F2A67DC410032CF4F /* OtherViews.swift in Sources */,
+				2E96567D2A67B6DC0032CF4F /* GaugingStationCellView.swift in Sources */,
+				2E9656772A6722BF0032CF4F /* GaugingStationModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

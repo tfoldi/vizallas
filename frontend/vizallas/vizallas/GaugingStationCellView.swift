@@ -11,6 +11,8 @@ import SwiftUI
 struct GaugingStationCellView: View {
     
     let item: GaugingStationModel
+    let action: (() -> Void)? 
+
     
     var body: some View {
         return HStack {
@@ -31,7 +33,7 @@ struct GaugingStationCellView: View {
                     .foregroundColor(Color.primary)
                     .font(.custom("Arial",size: 20))
                 Button(formattedWaterLevel(waterLevel: item.diffLastWeekAvgWaterLevel)) {
-                    
+                    action?()
                 }
                 .frame(width: 75)
                 .padding(5)

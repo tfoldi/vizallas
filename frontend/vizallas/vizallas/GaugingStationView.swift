@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct GaugingStationView: View {
     @State private var response: [GaugingStationModel] = []
     @State private var searchText: String = ""
     @State private var isHomeActive = false
-
+    @State private var isDetailActive = false
+    @State private var selectedGaugingStation: GaugingStationModel?
+    
     
     var filteredResponse: GaugingStationListModel {
         
@@ -31,30 +33,25 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             
-            
-            VStack {
-                TextField("Search", text: $searchText)
-                    .padding()
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+            ZStack {
                 List {
                     ForEach(filteredResponse.sectionTitles, id: \.self) { section in
                         Section(header: Text(section)) {
                             ForEach(filteredResponse.items(for: section)) { item in
-                                GaugingStationCellView(item: item)
-//                                HStack {
-//                                    Text(item.gaugingStation)
-//                                    Spacer()
-//                                    FavoriteButton(isFavorite: false) {
-//                                        toggleFavorite(for: item)
-//                                    }
-//                                }
-                                
+                                GaugingStationCellView(item: item, action: {
+                                    selectedGaugingStation = item
+                                    isDetailActive = true
+                                })
+
                             }
                         }
                     }
+                }.navigationDestination(isPresented: $isDetailActive) {
+                    if let item = selectedGaugingStation {
+                        DetailsView(item: item)
+                    }
                 }
                 .listStyle(InsetGroupedListStyle())
-                .navigationTitle("Gauging Stations")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu {
@@ -70,31 +67,41 @@ struct ContentView: View {
                                 .foregroundColor(.primary)
                         }
                     }
-
-
+                    
+                    
+                    
                 }
                 .navigationDestination(isPresented: $isHomeActive) {
                     HomeView()
                 }
-
-                .onAppear {
-                    fetchData() // Fetch the data and assign it to the response object
+                
+                .refreshable {
+                    fetchData()
                 }
-
+                
+                .onAppear {
+                    if response.count == 0 {
+                        fetchData() // Fetch the data and assign it to the response object
+                    } else {
+                        print("there is already data in it")
+                    }
+                }
+//                        .overlay(
+//                    Text("aaaaaaaaaaaaaa").background(Color.white), alignment: .bottom)
+//            .edgesIgnoringSafeArea(Edge.Set(.bottom))
             }
-//            .padding()
-            .edgesIgnoringSafeArea(Edge.Set(.bottom))
+            .searchable(text: $searchText)
+            .navigationTitle("Gauging Stations")
+
         }
     }
     
-    private func toggleFavorite(for item: GaugingStationModel) {
-        // Toggle the favorite state for the item
-        //item.isFavorite.toggle()
-    }
     
     private func fetchData() {
         Task {
             do {
+                print("refreshing data")
+                
                 self.response = try await supabase.database
                     .from("gauging_stations_v")
                     .select() // keep it empty for all, else specify returned data
@@ -111,35 +118,12 @@ struct ContentView: View {
 
 
 
-struct FavoriteButton: View {
-    @State private var isFavorite: Bool
-    private let action: () -> Void
-    
-    init(isFavorite: Bool, action: @escaping () -> Void) {
-        self._isFavorite = State(initialValue: isFavorite)
-        self.action = action
-    }
-    
-    var body: some View {
-        Button(action: {
-            isFavorite.toggle()
-            action()
-        }) {
-            Image(systemName: isFavorite ? "star.fill" : "star")
-                .foregroundColor(isFavorite ? .yellow : .gray)
-        }
-    }
-}
 
-struct ContentView_Previews: PreviewProvider {
+struct GaugingStationView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        GaugingStationView()
     }
 }
 
-struct HomeView: View {
-    var body: some View {
-        Text("Home View")
-            .navigationTitle("Home")
-    }
-}
+
+
