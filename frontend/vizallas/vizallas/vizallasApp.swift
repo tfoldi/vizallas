@@ -5,9 +5,8 @@
 //  Created by Tamas Foldi on 2023. 07. 18..
 //
 
-import SwiftUI
 import Supabase
-
+import SwiftUI
 
 @main
 struct vizallasApp: App {
@@ -17,8 +16,6 @@ struct vizallasApp: App {
         }
     }
 }
-
-
 
 let supabase = SupabaseClient(
     supabaseURL: Secrets.supabaseURL,

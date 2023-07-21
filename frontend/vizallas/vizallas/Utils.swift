@@ -7,9 +7,8 @@
 
 import Foundation
 
-
-func compareDiacriticInsensitive(base:String, searchText: String) -> Bool {
-    return base.range(of: searchText, options: [NSString.CompareOptions .caseInsensitive, .diacriticInsensitive]) != nil
+func compareDiacriticInsensitive(base: String, searchText: String) -> Bool {
+    return base.range(of: searchText, options: [NSString.CompareOptions.caseInsensitive, .diacriticInsensitive]) != nil
 }
 
 func formattedWaterLevel(waterLevel: Float?) -> String {
