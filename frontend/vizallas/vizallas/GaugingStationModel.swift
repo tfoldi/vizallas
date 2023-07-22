@@ -24,6 +24,10 @@ struct GaugingStationModel: Encodable, Decodable, Identifiable {
 }
 
 class GaugingStationListModel: RandomAccessCollection, ObservableObject {
+    @Published private var gaugingStationData: [GaugingStationModel] = []
+
+    @Published var sections: [String: [GaugingStationModel]]
+
     subscript(position: Array<GaugingStationModel>.Index) -> GaugingStationModel {
         return gaugingStationData[position]
     }
@@ -33,8 +37,6 @@ class GaugingStationListModel: RandomAccessCollection, ObservableObject {
     var endIndex: Array<GaugingStationModel>.Index {
         gaugingStationData.endIndex
     }
-
-    private var gaugingStationData: [GaugingStationModel] = []
 
     typealias Element = GaugingStationModel
 
@@ -47,8 +49,6 @@ class GaugingStationListModel: RandomAccessCollection, ObservableObject {
     var startIndex: Array<GaugingStationModel>.Index {
         gaugingStationData.startIndex
     }
-
-    var sections: [String: [GaugingStationModel]]
 
     init(data: [GaugingStationModel]) {
         gaugingStationData = data
@@ -68,5 +68,23 @@ class GaugingStationListModel: RandomAccessCollection, ObservableObject {
 
     func gaugingStations() -> [GaugingStationModel] {
         return gaugingStationData
+    }
+
+    func fetchData() async throws {
+        print("refreshing data")
+
+        let gaugingStationData: [GaugingStationModel] = try await supabase.database
+            .from("gauging_stations_v")
+            .select() // keep it empty for all, else specify returned data
+            .execute()
+            .value
+
+        print("Gaug count \(gaugingStationData.count)")
+
+        DispatchQueue.main.async {
+            self.gaugingStationData = gaugingStationData
+            self.sections = Dictionary(grouping: gaugingStationData, by: { $0.waterflow })
+        }
+        print("Gaug2 count \(self.gaugingStationData.count)")
     }
 }

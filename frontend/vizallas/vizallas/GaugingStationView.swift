@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GaugingStationView: View {
-    @State private var gaugingStationsList: GaugingStationListModel = .init(data: [])
+    @StateObject private var gaugingStationsList: GaugingStationListModel = .init(data: [])
     @State private var searchText: String = ""
     @State private var isHomeActive = false
     @State private var isDetailActive = false
@@ -27,17 +27,31 @@ struct GaugingStationView: View {
 
     var body: some View {
         NavigationStack {
-
             ZStack {
                 if gaugingStationsList.count == 0 {
                     ProgressView("Loading water levels").zIndex(1)
                 }
                 List {
                     Section(header: Text("Favorites")) {
-                        Text("No favorites yet")
-                    
+
+                        let favorites = ["Budapest-Duna", "Göd-Duna"]
+
+                        if favorites.count == 0 {
+                            Text("No favorites yet")
+                        } else {
+                            ForEach(favorites, id: \.self) { favoriteId in
+                                if let item = gaugingStationsList.gaugingStations().first(where: { $0.id == favoriteId }) {
+                                    GaugingStationCellView(item: item) {
+                                        selectedGaugingStation = item
+                                        isDetailActive = true
+                                    }
+                                } else {
+                                    Text("Loading data for \(favoriteId)")
+                                }
+                            }
+                        }
                     }
-    
+
                     ForEach(filteredResponse.sectionTitles, id: \.self) { section in
                         Section(header: Text(section)) {
                             ForEach(filteredResponse.items(for: section)) { item in
@@ -75,44 +89,27 @@ struct GaugingStationView: View {
                 }
 
                 .refreshable {
-                    fetchData()
+                    do {
+                        try await gaugingStationsList.fetchData()
+                    } catch {
+                        print("Fetching failed")
+                    }
                 }
-
-                .onAppear {
+                .task {
                     if gaugingStationsList.count == 0 {
-                        fetchData() // Fetch the data and assign it to the response object
+                        do {
+                            try await gaugingStationsList.fetchData()
+                        } catch {
+                            print("Fetching failed")
+                        }
                     } else {
                         print("there is already data in it")
                     }
                 }
-//                        .overlay(
-//                    Text("aaaaaaaaaaaaaa").background(Color.white), alignment: .bottom)
-//            .edgesIgnoringSafeArea(Edge.Set(.bottom))
             }
-            
+
             .searchable(text: $searchText)
             .navigationTitle("Gauging Stations")
-            
-        }
-    }
-
-    private func fetchData() {
-        Task {
-            do {
-                print("refreshing data")
-
-                let gaugingStations: [GaugingStationModel] = try await supabase.database
-                    .from("gauging_stations_v")
-                    .select() // keep it empty for all, else specify returned data
-                    .execute()
-                    .value
-
-                self.gaugingStationsList = GaugingStationListModel(data: gaugingStations)
-
-            } catch {
-                // Handle any errors that occurred during data retrieval
-                print("Data Fetch Error: \(error)")
-            }
         }
     }
 }
