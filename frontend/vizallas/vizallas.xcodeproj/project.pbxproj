@@ -21,6 +21,8 @@
 		2E96567B2A67B37F0032CF4F /* _Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E96567A2A67B37F0032CF4F /* _Secrets.swift */; };
 		2E96567D2A67B6DC0032CF4F /* GaugingStationCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E96567C2A67B6DC0032CF4F /* GaugingStationCellView.swift */; };
 		2E96567F2A67DC410032CF4F /* OtherViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E96567E2A67DC410032CF4F /* OtherViews.swift */; };
+		2E9656822A6C6DB60032CF4F /* DetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656812A6C6DB60032CF4F /* DetailsView.swift */; };
+		2E9656842A6C6E900032CF4F /* DetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656832A6C6E900032CF4F /* DetailsModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +60,8 @@
 		2E96567C2A67B6DC0032CF4F /* GaugingStationCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaugingStationCellView.swift; sourceTree = "<group>"; };
 		2E96567E2A67DC410032CF4F /* OtherViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherViews.swift; sourceTree = "<group>"; };
 		2E9656802A6BDB400032CF4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2E9656812A6C6DB60032CF4F /* DetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsView.swift; sourceTree = "<group>"; };
+		2E9656832A6C6E900032CF4F /* DetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,12 +117,14 @@
 				2E9656472A667EAC0032CF4F /* vizallasApp.swift */,
 				2E9656492A667EAC0032CF4F /* GaugingStationView.swift */,
 				2E96567C2A67B6DC0032CF4F /* GaugingStationCellView.swift */,
+				2E9656812A6C6DB60032CF4F /* DetailsView.swift */,
+				2E9656832A6C6E900032CF4F /* DetailsModel.swift */,
 				2E96567E2A67DC410032CF4F /* OtherViews.swift */,
+				2E9656762A6722BF0032CF4F /* GaugingStationModel.swift */,
 				2E96564B2A667EAE0032CF4F /* Assets.xcassets */,
 				2E96564D2A667EAE0032CF4F /* Preview Content */,
-				2E9656742A6710160032CF4F /* Secrets.swift */,
-				2E9656762A6722BF0032CF4F /* GaugingStationModel.swift */,
 				2E9656782A672DCD0032CF4F /* Utils.swift */,
+				2E9656742A6710160032CF4F /* Secrets.swift */,
 				2E96567A2A67B37F0032CF4F /* _Secrets.swift */,
 			);
 			path = vizallas;
@@ -287,11 +293,13 @@
 			files = (
 				2E9656792A672DCD0032CF4F /* Utils.swift in Sources */,
 				2E96567B2A67B37F0032CF4F /* _Secrets.swift in Sources */,
+				2E9656822A6C6DB60032CF4F /* DetailsView.swift in Sources */,
 				2E96564A2A667EAC0032CF4F /* GaugingStationView.swift in Sources */,
 				2E9656752A6710160032CF4F /* Secrets.swift in Sources */,
 				2E9656482A667EAC0032CF4F /* vizallasApp.swift in Sources */,
 				2E96567F2A67DC410032CF4F /* OtherViews.swift in Sources */,
 				2E96567D2A67B6DC0032CF4F /* GaugingStationCellView.swift in Sources */,
+				2E9656842A6C6E900032CF4F /* DetailsModel.swift in Sources */,
 				2E9656772A6722BF0032CF4F /* GaugingStationModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -457,6 +465,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = vizallas/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -486,6 +495,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = vizallas/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

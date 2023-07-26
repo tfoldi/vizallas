@@ -11,8 +11,6 @@ struct GaugingStationView: View {
     @StateObject private var gaugingStationsList: GaugingStationListModel = .init(data: [])
     @State private var searchText: String = ""
     @State private var isHomeActive = false
-    @State private var isDetailActive = false
-    @State private var selectedGaugingStation: GaugingStationModel?
 
     var filteredResponse: GaugingStationListModel {
         if searchText.isEmpty {
@@ -33,7 +31,6 @@ struct GaugingStationView: View {
                 }
                 List {
                     Section(header: Text("Favorites")) {
-
                         let favorites = ["Budapest-Duna", "Göd-Duna"]
 
                         if favorites.count == 0 {
@@ -41,10 +38,12 @@ struct GaugingStationView: View {
                         } else {
                             ForEach(favorites, id: \.self) { favoriteId in
                                 if let item = gaugingStationsList.gaugingStations().first(where: { $0.id == favoriteId }) {
-                                    GaugingStationCellView(item: item) {
-                                        selectedGaugingStation = item
-                                        isDetailActive = true
-                                    }
+                                    GaugingStationCellView(item: item) {}
+                                        .background(
+                                            NavigationLink("", value: item)
+                                                .opacity(0)
+                                        )
+
                                 } else {
                                     Text("Loading data for \(favoriteId)")
                                 }
@@ -55,17 +54,17 @@ struct GaugingStationView: View {
                     ForEach(filteredResponse.sectionTitles, id: \.self) { section in
                         Section(header: Text(section)) {
                             ForEach(filteredResponse.items(for: section)) { item in
-                                GaugingStationCellView(item: item, action: {
-                                    selectedGaugingStation = item
-                                    isDetailActive = true
-                                })
+                                GaugingStationCellView(item: item, action: {})
+                                    .background(
+                                        NavigationLink("", value: item)
+                                            .opacity(0)
+                                    )
                             }
                         }
                     }
-                }.navigationDestination(isPresented: $isDetailActive) {
-                    if let item = selectedGaugingStation {
-                        DetailsView(item: item)
-                    }
+                }
+                .navigationDestination(for: GaugingStationModel.self) { item in
+                    DetailsView(item: item)
                 }
                 .listStyle(InsetGroupedListStyle())
                 .toolbar {

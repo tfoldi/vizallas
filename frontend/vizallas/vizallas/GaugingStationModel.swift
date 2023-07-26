@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GaugingStationModel: Encodable, Decodable, Identifiable {
+struct GaugingStationModel: Encodable, Decodable, Identifiable, Hashable {
     let id: String
     let gaugingStation: String
     let waterflow: String

@@ -33,12 +33,3 @@ struct HomeView: View {
             .navigationTitle("Home")
     }
 }
-
-struct DetailsView: View {
-    let item: GaugingStationModel
-
-    var body: some View {
-        Text("Details View for \(item.gaugingStation)")
-            .navigationTitle("Details")
-    }
-}
