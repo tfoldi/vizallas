@@ -13,6 +13,7 @@ struct GaugingStationModel: Encodable, Decodable, Identifiable, Hashable {
     let waterflow: String
     let waterLevel: Float?
     let diffLastWeekAvgWaterLevel: Float?
+    let measurementDate: Date
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -20,6 +21,7 @@ struct GaugingStationModel: Encodable, Decodable, Identifiable, Hashable {
         case waterflow
         case waterLevel = "water_level"
         case diffLastWeekAvgWaterLevel = "diff_last_week_avg_water_level"
+        case measurementDate = "measure_date"
     }
 }
 
@@ -86,5 +88,44 @@ class GaugingStationListModel: RandomAccessCollection, ObservableObject {
             self.sections = Dictionary(grouping: gaugingStationData, by: { $0.waterflow })
         }
         print("Gaug2 count \(self.gaugingStationData.count)")
+    }
+}
+
+class GaugingStationFavoritesModel: ObservableObject {
+    @Published private var _favorites: [String]
+    private let userDefaultKey = "FavoriteGaugingStations"
+    
+    init() {
+        self._favorites = UserDefaults.standard.object(forKey: userDefaultKey) as? [String] ?? [String]()
+    }
+    
+    var favorites: [String] {
+        return _favorites
+    }
+   
+    var count: Int {
+        _favorites.count
+    }
+    
+    func remove(favorite: String) {
+        DispatchQueue.main.async {
+            self._favorites.removeAll(where: {$0 == favorite})
+            UserDefaults.standard.set(self._favorites, forKey: self.userDefaultKey)
+        }
+
+    }
+    
+    func contains(_ favorite:String) -> Bool {
+        return self._favorites.contains(where: {$0 == favorite})
+    }
+    
+    func add(favorite: String) {
+        if !contains(favorite) {
+            DispatchQueue.main.async {
+                self._favorites.append(favorite)
+                UserDefaults.standard.set(self._favorites, forKey: self.userDefaultKey)
+            }
+        }
+
     }
 }

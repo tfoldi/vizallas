@@ -67,6 +67,11 @@ class DetailsModel: ObservableObject {
 enum TimeFrameModel: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 
+    var firstDate: Date {
+        return Calendar.current.date(from: DateComponents(year: 2023, month: 6, day: 25))!
+    }
+
+    
     case week = "Last 7 Days"
     case month = "Last 30 Days"
     case year = "Last 365 Days"
@@ -89,7 +94,7 @@ enum TimeFrameModel: String, CaseIterable, Identifiable {
         case .month:
             return Calendar.current.date(byAdding: .day, value: -15, to: Date())!
         case .year:
-            return Calendar.current.date(byAdding: .day, value: -183, to: Date())!
+            return max(Date().addingTimeInterval(Date().timeIntervalSince(firstDate) / 2 * -1), Calendar.current.date(byAdding: .day, value: -183, to: Date())!)
         }
     }
 }

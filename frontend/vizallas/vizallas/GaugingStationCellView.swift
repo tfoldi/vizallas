@@ -22,6 +22,7 @@ struct GaugingStationCellView: View {
                 Text(item.waterflow)
                     .font(.custom("Arial", size: 18))
                     .foregroundColor(Color.secondary)
+                
             }
             Spacer()
             VStack {
@@ -55,6 +56,6 @@ struct GaugingStationCellView: View {
 
 struct GaugingStationCellView_Previews: PreviewProvider {
     static var previews: some View {
-        GaugingStationCellView(item: GaugingStationModel(id: "Budapest-Duna", gaugingStation: "Budapest", waterflow: "Duna", waterLevel: Optional(100), diffLastWeekAvgWaterLevel: Optional(10)), action: {})
+        GaugingStationCellView(item: GaugingStationModel(id: "Budapest-Duna", gaugingStation: "Budapest", waterflow: "Duna", waterLevel: Optional(100), diffLastWeekAvgWaterLevel: Optional(10), measurementDate: Date()), action: {})
     }
 }

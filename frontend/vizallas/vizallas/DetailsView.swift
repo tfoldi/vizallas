@@ -101,6 +101,11 @@ struct DetailsView: View {
                 List {
                     Section(header: Text("Station info")) {
                         HStack {
+                            Text("Date").bold()
+                            Spacer()
+                            Text(item.measurementDate.formatted())
+                        }
+                        HStack {
                             Text("Water level").bold()
                             Spacer()
                             if let waterLevel = item.waterLevel {
@@ -109,11 +114,7 @@ struct DetailsView: View {
                                 Text("No data")
                             }
                         }
-                        HStack {
-                            Text("Barfoo").bold()
-                            Spacer()
-                            Text("10 cm")
-                        }
+//
                     }
                 }
             }
@@ -143,7 +144,7 @@ struct DetailsView: View {
 
 struct DetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailsView(item: GaugingStationModel(id: "Budapest-Duna", gaugingStation: "Budapest", waterflow: "Duna", waterLevel: Optional(100), diffLastWeekAvgWaterLevel: Optional(10)))
+        DetailsView(item: GaugingStationModel(id: "Budapest-Duna", gaugingStation: "Budapest", waterflow: "Duna", waterLevel: Optional(100), diffLastWeekAvgWaterLevel: Optional(10), measurementDate: Date()))
     }
 }
 
@@ -162,7 +163,7 @@ struct DetailsAnnotationView: View {
                 .bold()
         }
         .padding()
-//        .background(.background)
-//        .opacity(1)
+        .background(.background)
+        .opacity(1)
     }
 }

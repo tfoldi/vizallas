@@ -11,6 +11,8 @@ struct GaugingStationView: View {
     @StateObject private var gaugingStationsList: GaugingStationListModel = .init(data: [])
     @State private var searchText: String = ""
     @State private var isHomeActive = false
+    @StateObject private var favorites =  GaugingStationFavoritesModel()
+
 
     var filteredResponse: GaugingStationListModel {
         if searchText.isEmpty {
@@ -31,21 +33,31 @@ struct GaugingStationView: View {
                 }
                 List {
                     Section(header: Text("Favorites")) {
-                        let favorites = ["Budapest-Duna", "Göd-Duna"]
 
-                        if favorites.count == 0 {
-                            Text("No favorites yet")
+                        if favorites.count == 0 && searchText == "" {
+                            Text("No favorites yet. Swipe left to set a few.")
+                                .italic()
                         } else {
-                            ForEach(favorites, id: \.self) { favoriteId in
-                                if let item = gaugingStationsList.gaugingStations().first(where: { $0.id == favoriteId }) {
+                            ForEach(favorites.favorites, id: \.self) { favoriteId in
+                                if let item = filteredResponse.gaugingStations().first(where: { $0.id == favoriteId }) {
                                     GaugingStationCellView(item: item) {}
                                         .background(
                                             NavigationLink("", value: item)
                                                 .opacity(0)
                                         )
+                                        .swipeActions(allowsFullSwipe: false) {
+                                            Button(role: .destructive) {
+                                                favorites.remove(favorite: favoriteId)
+                                            } label: {
+                                                Label("Remove", systemImage: "star.slash.fill")
+                                            }
+                                        }
+
 
                                 } else {
-                                    Text("Loading data for \(favoriteId)")
+                                    if searchText == "" {
+                                        Text("Loading data for \(favoriteId)")
+                                    }
                                 }
                             }
                         }
@@ -59,9 +71,18 @@ struct GaugingStationView: View {
                                         NavigationLink("", value: item)
                                             .opacity(0)
                                     )
+                                    .swipeActions(allowsFullSwipe: false) {
+                                        Button() {
+                                            favorites.add(favorite: item.id)
+                                        } label: {
+                                            Label("Add", systemImage: "star.fill")
+                                        }
+                                        .tint(.green)
+                                    }
                             }
                         }
                     }
+
                 }
                 .navigationDestination(for: GaugingStationModel.self) { item in
                     DetailsView(item: item)
