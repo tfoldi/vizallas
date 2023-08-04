@@ -11,8 +11,7 @@ struct GaugingStationView: View {
     @StateObject private var gaugingStationsList: GaugingStationListModel = .init(data: [])
     @State private var searchText: String = ""
     @State private var isHomeActive = false
-    @StateObject private var favorites =  GaugingStationFavoritesModel()
-
+    @StateObject private var favorites = GaugingStationFavoritesModel()
 
     var filteredResponse: GaugingStationListModel {
         if searchText.isEmpty {
@@ -33,7 +32,6 @@ struct GaugingStationView: View {
                 }
                 List {
                     Section(header: Text("Favorites")) {
-
                         if favorites.count == 0 && searchText == "" {
                             Text("No favorites yet. Swipe left to set a few.")
                                 .italic()
@@ -53,7 +51,6 @@ struct GaugingStationView: View {
                                             }
                                         }
 
-
                                 } else {
                                     if searchText == "" {
                                         Text("Loading data for \(favoriteId)")
@@ -72,7 +69,7 @@ struct GaugingStationView: View {
                                             .opacity(0)
                                     )
                                     .swipeActions(allowsFullSwipe: false) {
-                                        Button() {
+                                        Button {
                                             favorites.add(favorite: item.id)
                                         } label: {
                                             Label("Add", systemImage: "star.fill")
@@ -82,28 +79,27 @@ struct GaugingStationView: View {
                             }
                         }
                     }
-
                 }
                 .navigationDestination(for: GaugingStationModel.self) { item in
                     DetailsView(item: item)
                 }
                 .listStyle(InsetGroupedListStyle())
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Menu {
-                            Button("Home", action: {
-                                isHomeActive = true // Activate the home view
-                            })
-                            Button("Select Favorites", action: {
-                                // Perform an action for selecting favorites
-                            })
-                        } label: {
-                            Image(systemName: "ellipsis.circle")
-                                .font(.system(size: 24))
-                                .foregroundColor(.primary)
-                        }
-                    }
-                }
+//                .toolbar {
+//                    ToolbarItem(placement: .navigationBarTrailing) {
+//                        Menu {
+//                            Button("About", action: {
+//                                isHomeActive = true // Activate the home view
+//                            })
+                ////                            Button("Select Favorites", action: {
+                ////                                // Perform an action for selecting favorites
+                ////                            })
+//                        } label: {
+//                            Image(systemName: "ellipsis.circle")
+//                                .font(.system(size: 24))
+//                                .foregroundColor(.primary)
+//                        }
+//                    }
+//                }
                 .navigationDestination(isPresented: $isHomeActive) {
                     HomeView()
                 }
@@ -131,6 +127,7 @@ struct GaugingStationView: View {
             .searchable(text: $searchText)
             .navigationTitle("Gauging Stations")
         }
+        .environmentObject(favorites)
     }
 }
 

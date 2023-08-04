@@ -94,31 +94,39 @@ class GaugingStationListModel: RandomAccessCollection, ObservableObject {
 class GaugingStationFavoritesModel: ObservableObject {
     @Published private var _favorites: [String]
     private let userDefaultKey = "FavoriteGaugingStations"
-    
+
     init() {
-        self._favorites = UserDefaults.standard.object(forKey: userDefaultKey) as? [String] ?? [String]()
+        _favorites = UserDefaults.standard.object(forKey: userDefaultKey) as? [String] ?? [String]()
     }
-    
+
     var favorites: [String] {
         return _favorites
     }
-   
+
     var count: Int {
         _favorites.count
     }
-    
+
     func remove(favorite: String) {
         DispatchQueue.main.async {
-            self._favorites.removeAll(where: {$0 == favorite})
+            self._favorites.removeAll(where: { $0 == favorite })
             UserDefaults.standard.set(self._favorites, forKey: self.userDefaultKey)
         }
+    }
 
+    func contains(_ favorite: String) -> Bool {
+        print("contains: \(favorite) in \(_favorites)")
+        return _favorites.contains(where: { $0 == favorite })
     }
-    
-    func contains(_ favorite:String) -> Bool {
-        return self._favorites.contains(where: {$0 == favorite})
+
+    func toggle(_ favorite: String) {
+        if contains(favorite) {
+            remove(favorite: favorite)
+        } else {
+            add(favorite: favorite)
+        }
     }
-    
+
     func add(favorite: String) {
         if !contains(favorite) {
             DispatchQueue.main.async {
@@ -126,6 +134,5 @@ class GaugingStationFavoritesModel: ObservableObject {
                 UserDefaults.standard.set(self._favorites, forKey: self.userDefaultKey)
             }
         }
-
     }
 }

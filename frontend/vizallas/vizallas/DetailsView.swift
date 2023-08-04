@@ -14,6 +14,7 @@ struct DetailsView: View {
     @State private var selectedTimeFrame = TimeFrameModel.month
     let timeFrames = TimeFrameModel.allCases
     @State private var selectedIndex: Date? = nil
+    @EnvironmentObject private var favorites: GaugingStationFavoritesModel
 
     init(item: GaugingStationModel) {
         self.item = item
@@ -22,20 +23,40 @@ struct DetailsView: View {
     }
 
     var body: some View {
-        //        NavigationStack {
-        VStack {
-            //            TabView {
-            //                Text("Details View for \(item.gaugingStation)")
+        VStack(alignment: .leading) {
             if detailsModel.hourlyData.count == 0 {
                 ProgressView("Loading details").frame(height: 300)
                     .background(.background)
             } else {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(item.waterflow)
+                            .font(.title2)
+                            .foregroundColor(.secondary)
+                        //                        .padding(.leading, 15)
+                        Text(item.measurementDate.formatted())
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                        //
+                    }
+                    Spacer()
+                    Button {
+                        favorites.toggle(item.id)
+                    } label: {
+                        Label("", systemImage: favorites.contains(item.id) ? "star.fill" : "star")
+                    }
+                }.padding(.leading, 15)
+
                 VStack {
-                    Picker("Time frame", selection: $selectedTimeFrame) {
-                        ForEach(timeFrames) { timeframe in
-                            Text(timeframe.rawValue).tag(timeframe)
-                        }
-                    }.pickerStyle(.segmented)
+                    if let selectedDate = selectedIndex {
+                        Text(selectedDate.formatted())
+                    } else {
+                        Picker("Time frame", selection: $selectedTimeFrame) {
+                            ForEach(timeFrames) { timeframe in
+                                Text(timeframe.rawValue).tag(timeframe)
+                            }
+                        }.pickerStyle(.segmented)
+                    }
                     Chart {
                         //                RuleMark(y: .value("Limit", 50))
                         ForEach(detailsModel.hourlyData, id: \.self) { item in
@@ -114,7 +135,6 @@ struct DetailsView: View {
                                 Text("No data")
                             }
                         }
-//
                     }
                 }
             }
@@ -122,6 +142,41 @@ struct DetailsView: View {
         .background(Color(uiColor: UIColor.systemGroupedBackground))
 
         .navigationTitle(item.gaugingStation)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(item.gaugingStation)
+                    .font(.title)
+                    .bold()
+            }
+        }
+
+//
+//                HStack() {
+//                    VStack(alignment: .leading) {
+//                        Text(item.gaugingStation)
+//                            .font(.largeTitle)
+//                            .bold()
+//                        //                        .padding(.leading, 15)
+        ////                        Text(item.waterflow)
+        ////                            .font(.title2)
+        ////                            .foregroundColor(.secondary)
+        ////                        //                        .padding(.leading, 15)
+        ////                        Text(item.measurementDate.formatted())
+        ////                            .font(.footnote)
+        ////                            .foregroundColor(.secondary)
+//                        //
+//                    }
+//                    Spacer()
+//                    Button() {
+//                        favorites.toggle(item.id)
+//                    } label: {
+//                        Label("",systemImage: favorites.contains(item.id) ? "star" : "star.fill")
+//                    }
+//                }
+//            }
+//        }
+//        .navigationTitle("")
         .refreshable {
             do {
                 try await detailsModel.fetchData()
@@ -145,6 +200,7 @@ struct DetailsView: View {
 struct DetailsView_Previews: PreviewProvider {
     static var previews: some View {
         DetailsView(item: GaugingStationModel(id: "Budapest-Duna", gaugingStation: "Budapest", waterflow: "Duna", waterLevel: Optional(100), diffLastWeekAvgWaterLevel: Optional(10), measurementDate: Date()))
+            .environmentObject(GaugingStationFavoritesModel())
     }
 }
 
@@ -156,9 +212,9 @@ struct DetailsAnnotationView: View {
         VStack(alignment: .leading) {
             Text(detail.measureDate.formatted())
                 .font(.caption)
-//            Text("YEE")
-//                .font(.headline)
-//            Divider()
+            //            Text("YEE")
+            //                .font(.headline)
+            //            Divider()
             Text("\(Int(waterLevel)) cm")
                 .bold()
         }

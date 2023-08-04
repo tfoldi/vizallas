@@ -22,7 +22,6 @@ struct GaugingStationCellView: View {
                 Text(item.waterflow)
                     .font(.custom("Arial", size: 18))
                     .foregroundColor(Color.secondary)
-                
             }
             Spacer()
             VStack {

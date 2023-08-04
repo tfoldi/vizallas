@@ -71,7 +71,6 @@ enum TimeFrameModel: String, CaseIterable, Identifiable {
         return Calendar.current.date(from: DateComponents(year: 2023, month: 6, day: 25))!
     }
 
-    
     case week = "Last 7 Days"
     case month = "Last 30 Days"
     case year = "Last 365 Days"
