@@ -70,6 +70,24 @@ class DetailsModel: ObservableObject {
             abs(date.timeIntervalSince(a.measureDate)) < abs(date.timeIntervalSince(b.measureDate))
         }?.measureDate
     }
+
+    func calculatePercentile(_ percentile: Int) -> Float? {
+        // Extract waterLevel values into an array and sort it
+        let sortedLevels = _hourlyData.compactMap { $0.waterLevel }.sorted()
+
+        // If there are no non-nil values, return nil for the percentiles
+        guard !sortedLevels.isEmpty else {
+            return nil
+        }
+
+        // Calculate indices for the 25th and 75th percentiles
+        let pIndex = Int(Float(sortedLevels.count * percentile) / 100)
+
+        // Get the values at these indices
+        let p = sortedLevels[pIndex]
+
+        return p
+    }
 }
 
 enum TimeFrameModel: String, CaseIterable, Identifiable {

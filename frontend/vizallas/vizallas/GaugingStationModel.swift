@@ -115,7 +115,6 @@ class GaugingStationFavoritesModel: ObservableObject {
     }
 
     func contains(_ favorite: String) -> Bool {
-        print("contains: \(favorite) in \(_favorites)")
         return _favorites.contains(where: { $0 == favorite })
     }
 

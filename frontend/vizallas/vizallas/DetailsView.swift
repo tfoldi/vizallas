@@ -13,7 +13,7 @@ struct DetailsView: View {
     @StateObject var detailsModel: DetailsModel
     @State var selectedHourlyData: HourlyModel?
     @State private var selectedTimeFrame = TimeFrameModel.month
-    let timeFrames = TimeFrameModel.allCases
+    private let timeFrames = TimeFrameModel.allCases
     @EnvironmentObject private var favorites: GaugingStationFavoritesModel
 
     init(item: GaugingStationModel) {
@@ -79,24 +79,17 @@ struct DetailsView: View {
 
                         // highlight
                         if let item = selectedHourlyData, let waterLevel = item.waterLevel {
-//                            RectangleMark(
-//                                x: .value("Index", item.measureDate),
-//                                //                                                y: .value("Value", waterLevel)
-//                                yStart: .value("Value", 0),
-//                                yEnd: .value("Value", waterLevel),
-//                                width: 2
-//                            )
                             PointMark(
                                 x: .value("Index", item.measureDate),
                                 y: .value("Value", waterLevel)
                             )
                             .foregroundStyle(Color.orange.gradient)
-                            //                                            .opacity(0.4)
                             .annotation(
-                                position: item.measureDate < selectedTimeFrame.halfTime ? .trailing : .leading,
-                                alignment: .trailing, spacing: 10
+                                position: annotationPosition(measureDate: item.measureDate, waterLevel: waterLevel),
+                                spacing: 10
                             ) {
                                 DetailsAnnotationView(detail: item, waterLevel: waterLevel)
+                                    .opacity(0.97)
                             }
                         }
                     }
@@ -109,6 +102,7 @@ struct DetailsView: View {
                                     DragGesture()
                                         .onChanged { value in
                                             let currentX = value.location.x - geometry[chart.plotAreaFrame].origin.x
+
                                             guard currentX >= 0, currentX < chart.plotAreaSize.width else {
                                                 return
                                             }
@@ -164,32 +158,6 @@ struct DetailsView: View {
             }
         }
 
-//
-//                HStack() {
-//                    VStack(alignment: .leading) {
-//                        Text(item.gaugingStation)
-//                            .font(.largeTitle)
-//                            .bold()
-//                        //                        .padding(.leading, 15)
-        ////                        Text(item.waterflow)
-        ////                            .font(.title2)
-        ////                            .foregroundColor(.secondary)
-        ////                        //                        .padding(.leading, 15)
-        ////                        Text(item.measurementDate.formatted())
-        ////                            .font(.footnote)
-        ////                            .foregroundColor(.secondary)
-//                        //
-//                    }
-//                    Spacer()
-//                    Button() {
-//                        favorites.toggle(item.id)
-//                    } label: {
-//                        Label("",systemImage: favorites.contains(item.id) ? "star" : "star.fill")
-//                    }
-//                }
-//            }
-//        }
-//        .navigationTitle("")
         .refreshable {
             do {
                 try await detailsModel.fetchData()
@@ -208,11 +176,44 @@ struct DetailsView: View {
         }
         //    }
     }
+
+    func annotationPosition(measureDate: Date, waterLevel: Float) -> AnnotationPosition {
+        if let p25 = detailsModel.calculatePercentile(25),
+           let p75 = detailsModel.calculatePercentile(75)
+        {
+            print("wl=\(waterLevel) p25=\(p25) p75=\(p75) ")
+
+            let position: AnnotationPosition
+
+            if measureDate < selectedTimeFrame.halfTime && waterLevel >= p75 {
+                position = .bottomTrailing
+            } else if measureDate >= selectedTimeFrame.halfTime && waterLevel >= p75 {
+                position = .bottomLeading
+            } else if measureDate >= selectedTimeFrame.halfTime && waterLevel > p25 && waterLevel < p75 {
+                position = .leading
+
+            } else if measureDate < selectedTimeFrame.halfTime && waterLevel > p25 && waterLevel < p75 {
+                position = .trailing
+            } else if measureDate < selectedTimeFrame.halfTime && waterLevel <= p25 {
+                position = .topTrailing
+            } else if measureDate >= selectedTimeFrame.halfTime && waterLevel <= p25 {
+                position = .topLeading
+            } else {
+                position = .leading
+            }
+
+            return position
+
+        } else {
+            print("not matched in annotationPosition")
+            return .leading
+        }
+    }
 }
 
 struct DetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailsView(item: GaugingStationModel(id: "Budapest-Duna", gaugingStation: "Budapest", waterflow: "Duna", waterLevel: Optional(100), diffLastWeekAvgWaterLevel: Optional(10), measurementDate: Date()))
+        DetailsView(item: GaugingStationModel(id: "Göd-Duna", gaugingStation: "Göd", waterflow: "Duna", waterLevel: Optional(100), diffLastWeekAvgWaterLevel: Optional(10), measurementDate: Date()))
             .environmentObject(GaugingStationFavoritesModel())
     }
 }
