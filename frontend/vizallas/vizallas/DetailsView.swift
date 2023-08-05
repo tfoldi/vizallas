@@ -11,9 +11,9 @@ import SwiftUI
 struct DetailsView: View {
     let item: GaugingStationModel
     @StateObject var detailsModel: DetailsModel
+    @State var selectedHourlyData: HourlyModel?
     @State private var selectedTimeFrame = TimeFrameModel.month
     let timeFrames = TimeFrameModel.allCases
-    @State private var selectedIndex: Date? = nil
     @EnvironmentObject private var favorites: GaugingStationFavoritesModel
 
     init(item: GaugingStationModel) {
@@ -48,8 +48,15 @@ struct DetailsView: View {
                 }.padding(.leading, 15)
 
                 VStack {
-                    if let selectedDate = selectedIndex {
-                        Text(selectedDate.formatted())
+                    if let data = selectedHourlyData {
+                        HStack(alignment: .top) {
+                            Text(data.measureDate.formatted())
+                                .font(.system(size: 21))
+                            Spacer()
+                            Text(data.formattedWaterLevel)
+                                .bold()
+                                .font(.system(size: 21))
+                        }
                     } else {
                         Picker("Time frame", selection: $selectedTimeFrame) {
                             ForEach(timeFrames) { timeframe in
@@ -66,25 +73,30 @@ struct DetailsView: View {
                                         x: .value("Index", item.measureDate),
                                         y: .value("Value", waterLevel)
                                     )
-
-                                    if let selectedIndex, selectedIndex == item.measureDate {
-                                        RectangleMark(
-                                            x: .value("Index", selectedIndex),
-                                            //                                                y: .value("Value", waterLevel)
-                                            yStart: .value("Value", 0),
-                                            yEnd: .value("Value", waterLevel),
-                                            width: 2
-                                        )
-                                        .foregroundStyle(Color.orange.gradient)
-                                        //                                            .opacity(0.4)
-                                        .annotation(
-                                            position: item.measureDate < selectedTimeFrame.halfTime ? .trailing : .leading,
-                                            alignment: .trailing, spacing: 10
-                                        ) {
-                                            DetailsAnnotationView(detail: item, waterLevel: waterLevel)
-                                        }
-                                    }
                                 }
+                            }
+                        }
+
+                        // highlight
+                        if let item = selectedHourlyData, let waterLevel = item.waterLevel {
+//                            RectangleMark(
+//                                x: .value("Index", item.measureDate),
+//                                //                                                y: .value("Value", waterLevel)
+//                                yStart: .value("Value", 0),
+//                                yEnd: .value("Value", waterLevel),
+//                                width: 2
+//                            )
+                            PointMark(
+                                x: .value("Index", item.measureDate),
+                                y: .value("Value", waterLevel)
+                            )
+                            .foregroundStyle(Color.orange.gradient)
+                            //                                            .opacity(0.4)
+                            .annotation(
+                                position: item.measureDate < selectedTimeFrame.halfTime ? .trailing : .leading,
+                                alignment: .trailing, spacing: 10
+                            ) {
+                                DetailsAnnotationView(detail: item, waterLevel: waterLevel)
                             }
                         }
                     }
@@ -104,10 +116,11 @@ struct DetailsView: View {
                                             guard let index = chart.value(atX: currentX, as: Date.self) else {
                                                 return
                                             }
-                                            selectedIndex = detailsModel.closestMeasureToDate(to: index)
+                                            let selectedIndex = detailsModel.closestMeasureToDate(to: index)
+                                            selectedHourlyData = detailsModel.hourlyData.first(where: { $0.measureDate == selectedIndex })
                                         }
                                         .onEnded { _ in
-                                            selectedIndex = nil
+                                            selectedHourlyData = nil
                                         }
                                 )
                         }

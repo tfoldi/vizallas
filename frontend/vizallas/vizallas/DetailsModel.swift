@@ -27,6 +27,14 @@ struct HourlyModel: Encodable, Decodable, Identifiable, Hashable {
         case gaugingStationId = "gauging_station_id"
 //        case loadDate = "load_dt"
     }
+
+    var formattedWaterLevel: String {
+        if let _waterLevel = waterLevel {
+            return "\(Int(_waterLevel)) cm"
+        } else {
+            return "Unknown"
+        }
+    }
 }
 
 class DetailsModel: ObservableObject {
