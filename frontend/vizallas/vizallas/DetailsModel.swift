@@ -15,6 +15,7 @@ struct HourlyModel: Encodable, Decodable, Identifiable, Hashable {
     let waterLevel: Float?
     let waterDischarge: Float?
     let gaugingStationId: String
+    let waterTemperature: Float?
 //    let loadDate: Date
 
     enum CodingKeys: String, CodingKey {
@@ -25,6 +26,7 @@ struct HourlyModel: Encodable, Decodable, Identifiable, Hashable {
         case waterLevel = "water_level"
         case waterDischarge = "water_discharge"
         case gaugingStationId = "gauging_station_id"
+        case waterTemperature = "water_temp"
 //        case loadDate = "load_dt"
     }
 
@@ -49,6 +51,10 @@ class DetailsModel: ObservableObject {
     var hourlyData: [HourlyModel] {
         return _hourlyData
     }
+    
+    var latestHourlyData: HourlyModel? {
+        return self._hourlyData.first
+    }
 
     func fetchData() async throws {
         print("getting hourly data for \(gaugingStationId)")
@@ -57,6 +63,7 @@ class DetailsModel: ObservableObject {
             .from("hourly_data")
             .select() // keep it empty for all, else specify returned data
             .eq(column: "gauging_station_id", value: gaugingStationId)
+            .order(column: "measure_date", ascending: false)
             .execute()
             .value
 

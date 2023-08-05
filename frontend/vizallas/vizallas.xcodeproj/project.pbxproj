@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E837B7B2A7E3FF40097D308 /* GaugingStationDescModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E837B7A2A7E3FF40097D308 /* GaugingStationDescModel.swift */; };
 		2E9656482A667EAC0032CF4F /* vizallasApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656472A667EAC0032CF4F /* vizallasApp.swift */; };
 		2E96564A2A667EAC0032CF4F /* GaugingStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9656492A667EAC0032CF4F /* GaugingStationView.swift */; };
 		2E96564C2A667EAE0032CF4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E96564B2A667EAE0032CF4F /* Assets.xcassets */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E837B7A2A7E3FF40097D308 /* GaugingStationDescModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaugingStationDescModel.swift; sourceTree = "<group>"; };
 		2E9656442A667EAC0032CF4F /* vizallas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vizallas.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E9656472A667EAC0032CF4F /* vizallasApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vizallasApp.swift; sourceTree = "<group>"; };
 		2E9656492A667EAC0032CF4F /* GaugingStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaugingStationView.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				2E9656832A6C6E900032CF4F /* DetailsModel.swift */,
 				2E96567E2A67DC410032CF4F /* OtherViews.swift */,
 				2E9656762A6722BF0032CF4F /* GaugingStationModel.swift */,
+				2E837B7A2A7E3FF40097D308 /* GaugingStationDescModel.swift */,
 				2E96564B2A667EAE0032CF4F /* Assets.xcassets */,
 				2E96564D2A667EAE0032CF4F /* Preview Content */,
 				2E9656782A672DCD0032CF4F /* Utils.swift */,
@@ -295,6 +298,7 @@
 				2E96567B2A67B37F0032CF4F /* _Secrets.swift in Sources */,
 				2E9656822A6C6DB60032CF4F /* DetailsView.swift in Sources */,
 				2E96564A2A667EAC0032CF4F /* GaugingStationView.swift in Sources */,
+				2E837B7B2A7E3FF40097D308 /* GaugingStationDescModel.swift in Sources */,
 				2E9656752A6710160032CF4F /* Secrets.swift in Sources */,
 				2E9656482A667EAC0032CF4F /* vizallasApp.swift in Sources */,
 				2E96567F2A67DC410032CF4F /* OtherViews.swift in Sources */,
