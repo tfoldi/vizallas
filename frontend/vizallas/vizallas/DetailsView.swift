@@ -17,6 +17,10 @@ struct DetailsView: View {
     @EnvironmentObject private var favorites: GaugingStationFavoritesModel
     @StateObject private var stationDesc: GaugingStationDescModel
 
+    // Error handling
+    @State private var errorMessage: String? = nil
+    @State private var showingAlert = false
+
     init(item: GaugingStationModel) {
         self.item = item
         print("Details: Loading data for \(item.id)")
@@ -26,12 +30,11 @@ struct DetailsView: View {
 
     var body: some View {
         ScrollView(.vertical) {
-            if  detailsModel.hourlyData.count == 0 {
+            if detailsModel.hourlyData.count == 0 {
                 ProgressView("Loading details").frame(width: 500, height: 400)
                     .background(Color(uiColor: UIColor.systemGroupedBackground))
             } else {
                 VStack(alignment: .leading) {
-                    
                     HStack {
                         VStack(alignment: .leading) {
                             Text(item.waterflow)
@@ -50,7 +53,7 @@ struct DetailsView: View {
                             Label("", systemImage: favorites.contains(item.id) ? "star.fill" : "star")
                         }
                     }.padding(.leading, 15)
-                    
+
                     VStack {
                         if let data = selectedHourlyData {
                             HStack(alignment: .top) {
@@ -80,7 +83,7 @@ struct DetailsView: View {
                                     }
                                 }
                             }
-                            
+
                             // highlight
                             if let item = selectedHourlyData, let waterLevel = item.waterLevel {
                                 PointMark(
@@ -106,11 +109,11 @@ struct DetailsView: View {
                                         DragGesture()
                                             .onChanged { value in
                                                 let currentX = value.location.x - geometry[chart.plotAreaFrame].origin.x
-                                                
+
                                                 guard currentX >= 0, currentX < chart.plotAreaSize.width else {
                                                     return
                                                 }
-                                                
+
                                                 guard let index = chart.value(atX: currentX, as: Date.self) else {
                                                     return
                                                 }
@@ -123,7 +126,7 @@ struct DetailsView: View {
                                     )
                             }
                         }
-                        
+
                         .background(.background)
                         .cornerRadius(8)
                         .frame(height: 300)
@@ -133,8 +136,8 @@ struct DetailsView: View {
                     VStack(alignment: .leading) {
                         Section(header: Text("Latest measures")
                             .font(.title3)
-                            .padding(.top,15)
-                            .padding(.bottom,1)                        )
+                            .padding(.top, 15)
+                            .padding(.bottom, 1))
                         {
                             HStack {
                                 Text("Measure date")
@@ -158,7 +161,7 @@ struct DetailsView: View {
                                 }
                             }
                             Spacer()
-                            
+
                             if let latestData = detailsModel.latestHourlyData,
                                let waterDischarge = latestData.waterDischarge
                             {
@@ -168,11 +171,10 @@ struct DetailsView: View {
                                     Spacer()
                                     Text("\(Int(waterDischarge)) m³/s")
                                         .bold()
-                          
                                 }
                                 Spacer()
                             }
-                            
+
                             if let latestData = detailsModel.latestHourlyData,
                                let waterTemperature = latestData.waterTemperature
                             {
@@ -182,44 +184,37 @@ struct DetailsView: View {
                                     Spacer()
                                     Text("\(Int(waterTemperature)) C°")
                                         .bold()
-                          
                                 }
                                 Spacer()
                             }
 
-
-                            
-                        } .background(.background)
+                        }.background(.background)
                             .padding([.trailing, .leading])
 
                         Spacer()
-                        Section(header: Text("Station info")                            .font(.title3)
-                            .padding(.top,20)
-                            .padding(.bottom,1)
-) {
-                                ForEach(stationDesc.descData, id: \.self) { desc in
-                                    HStack {
-                                        Text(desc.name)
-                                            .foregroundColor(.secondary)
-                                        Spacer()
-                                        Text(desc.value)
-                                            .bold()
-                                    }
+                        Section(header: Text("Station info").font(.title3)
+                            .padding(.top, 20)
+                            .padding(.bottom, 1)
+                        ) {
+                            ForEach(stationDesc.descData, id: \.self) { desc in
+                                HStack {
+                                    Text(desc.name)
+                                        .foregroundColor(.secondary)
                                     Spacer()
+                                    Text(desc.value)
+                                        .bold()
                                 }
-                            
+                                Spacer()
+                            }
                         }
                         .padding([.trailing, .leading])
-                        
                     }
-                        .background(.background)
-                        .cornerRadius(8)
-                        .padding()
-                    //.scaledToFill()
-   
+                    .background(.background)
+                    .cornerRadius(8)
+                    .padding()
+                    // .scaledToFill()
                 }
                 .background(Color(uiColor: UIColor.systemGroupedBackground))
-                
             }
         }
         .background(Color(uiColor: UIColor.systemGroupedBackground))
@@ -232,39 +227,49 @@ struct DetailsView: View {
                     .bold()
             }
         }
-        
+
         .refreshable {
             do {
-                try await detailsModel.fetchData()
-                try await stationDesc.fetchData()
+                async let result1: () = detailsModel.fetchData()
+                async let result2: () = stationDesc.fetchData()
+
+                try await result1
+                try await result2
             } catch {
+                errorMessage = "Failed to fetch data. Please try again later. (\(error))"
+                showingAlert = true
                 print("fetch failed: \(error)")
             }
         }
-        
+
         .task {
             print("getting id \(item.id) and \(detailsModel.gaugingStationId)")
             do {
-                try await detailsModel.fetchData()
-                try await stationDesc.fetchData()
+                async let result1: () = detailsModel.fetchData()
+                async let result2: () = stationDesc.fetchData()
+
+                try await result1
+                try await result2
             } catch {
+                errorMessage = "Failed to fetch data. Please try again later. (\(error))"
+                showingAlert = true
                 print("fetch failed: \(error)")
             }
         }
-        //    }
+        .alert(isPresented: $showingAlert) {
+            Alert(title: Text("Error fetching data from server"), message: Text(errorMessage ?? "Unknown error"), dismissButton: .default(Text("Close")))
+        }
     }
-    
+
     func annotationPosition(measureDate: Date, waterLevel: Float) -> AnnotationPosition {
         if let min = detailsModel.hourlyData.compactMap({ $0.waterLevel }).min(),
            let max = detailsModel.hourlyData.compactMap({ $0.waterLevel }).max()
-            
-            
+
         {
             let position: AnnotationPosition
             let p25 = (max - min) / 4 + min
-            let p75 = (max - min) / 4  * 3 + min
-            
-            
+            let p75 = (max - min) / 4 * 3 + min
+
             if measureDate < selectedTimeFrame.halfTime && waterLevel >= p75 {
                 position = .bottomTrailing
             } else if measureDate >= selectedTimeFrame.halfTime && waterLevel >= p75 {
@@ -275,19 +280,19 @@ struct DetailsView: View {
                 position = .topLeading
             } else if measureDate >= selectedTimeFrame.halfTime && waterLevel > p25 && waterLevel < p75 {
                 position = .leading
-                
+
             } else if measureDate < selectedTimeFrame.halfTime && waterLevel > p25 && waterLevel < p75 {
                 position = .trailing
-                
+
             } else {
                 print("not matched in annotationPosition")
                 position = .leading
             }
-            
-//            print("wl=\(waterLevel) p25=\(p25) p75=\(p75) => \(position)")
-            
+
+            //            print("wl=\(waterLevel) p25=\(p25) p75=\(p75) => \(position)")
+
             return position
-            
+
         } else {
             print("not matched in annotationPosition")
             return .leading
@@ -305,7 +310,7 @@ struct DetailsView_Previews: PreviewProvider {
 struct DetailsAnnotationView: View {
     let detail: HourlyModel
     let waterLevel: Float
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(detail.measureDate.formatted())

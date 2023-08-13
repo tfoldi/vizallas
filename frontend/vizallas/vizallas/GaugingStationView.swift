@@ -12,6 +12,9 @@ struct GaugingStationView: View {
     @State private var searchText: String = ""
     @State private var isHomeActive = false
     @StateObject private var favorites = GaugingStationFavoritesModel()
+    // Error handling
+    @State private var errorMessage: String? = nil
+    @State private var showingAlert = false
 
     var filteredResponse: GaugingStationListModel {
         if searchText.isEmpty {
@@ -107,6 +110,9 @@ struct GaugingStationView: View {
                 .refreshable {
                     do {
                         try await gaugingStationsList.fetchData()
+                        errorMessage = "Failed to fetch data. Please try again later."
+                        showingAlert = true
+
                     } catch {
                         print("Fetching failed")
                     }
@@ -116,11 +122,17 @@ struct GaugingStationView: View {
                         do {
                             try await gaugingStationsList.fetchData()
                         } catch {
+                            errorMessage = "Failed to fetch data. Please try again later. (\(error)"
+                            showingAlert = true
+
                             print("Fetching failed")
                         }
                     } else {
                         print("there is already data in it")
                     }
+                }
+                .alert(isPresented: $showingAlert) {
+                    Alert(title: Text("Error fetching data from server"), message: Text(errorMessage ?? "Unknown error"), dismissButton: .default(Text("Close")))
                 }
             }
 

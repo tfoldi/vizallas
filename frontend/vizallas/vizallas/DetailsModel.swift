@@ -51,9 +51,9 @@ class DetailsModel: ObservableObject {
     var hourlyData: [HourlyModel] {
         return _hourlyData
     }
-    
+
     var latestHourlyData: HourlyModel? {
-        return self._hourlyData.first
+        return _hourlyData.first
     }
 
     func fetchData() async throws {

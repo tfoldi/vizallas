@@ -5,7 +5,6 @@
 //  Created by Tamas Foldi on 2023. 08. 05..
 //
 
-
 import Foundation
 
 struct GaugingStationDescData: Encodable, Decodable, Identifiable, Hashable {
@@ -18,7 +17,7 @@ struct GaugingStationDescData: Encodable, Decodable, Identifiable, Hashable {
     enum CodingKeys: String, CodingKey {
         case id
         case gaugingStation = "gauging_station"
-        case waterflow = "waterflow"
+        case waterflow
         case name
         case value
     }
@@ -40,7 +39,7 @@ class GaugingStationDescModel: ObservableObject {
     }
 
     func fetchData() async throws {
-        print("getting hourly data for \(self.gaugingStation)")
+        print("GaugingStationDescModel for \(gaugingStation)")
 
         let _descData: [GaugingStationDescData] = try await supabase.database
             .from("gauging_station_desc")
