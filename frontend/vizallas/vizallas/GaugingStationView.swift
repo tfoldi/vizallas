@@ -27,6 +27,40 @@ struct GaugingStationView: View {
         }
     }
 
+    private func fetchData() async {
+        do {
+            try await gaugingStationsList.fetchData()
+        } catch {
+            errorMessage = "Failed to fetch data. Please try again later. (\(error))"
+            showingAlert = true
+            print("Fetching failed: \(error)")
+        }
+    }
+
+    private var FavoriteStations: some View {
+        ForEach(favorites.favorites, id: \.self) { favoriteId in
+            if let item = filteredResponse.gaugingStations().first(where: { $0.id == favoriteId }) {
+                GaugingStationCellView(item: item) {}
+                    .background(
+                        NavigationLink("", value: item)
+                            .opacity(0)
+                    )
+                    .swipeActions(allowsFullSwipe: false) {
+                        Button(role: .destructive) {
+                            favorites.remove(favorite: favoriteId)
+                        } label: {
+                            Label("Remove", systemImage: "star.slash.fill")
+                        }
+                    }
+
+            } else {
+                if searchText == "" {
+                    Text("Loading data for \(favoriteId)")
+                }
+            }
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -39,27 +73,7 @@ struct GaugingStationView: View {
                             Text("No favorites yet. Swipe left to set a few.")
                                 .italic()
                         } else {
-                            ForEach(favorites.favorites, id: \.self) { favoriteId in
-                                if let item = filteredResponse.gaugingStations().first(where: { $0.id == favoriteId }) {
-                                    GaugingStationCellView(item: item) {}
-                                        .background(
-                                            NavigationLink("", value: item)
-                                                .opacity(0)
-                                        )
-                                        .swipeActions(allowsFullSwipe: false) {
-                                            Button(role: .destructive) {
-                                                favorites.remove(favorite: favoriteId)
-                                            } label: {
-                                                Label("Remove", systemImage: "star.slash.fill")
-                                            }
-                                        }
-
-                                } else {
-                                    if searchText == "" {
-                                        Text("Loading data for \(favoriteId)")
-                                    }
-                                }
-                            }
+                            FavoriteStations
                         }
                     }
 
@@ -87,46 +101,16 @@ struct GaugingStationView: View {
                     DetailsView(item: item)
                 }
                 .listStyle(InsetGroupedListStyle())
-//                .toolbar {
-//                    ToolbarItem(placement: .navigationBarTrailing) {
-//                        Menu {
-//                            Button("About", action: {
-//                                isHomeActive = true // Activate the home view
-//                            })
-                ////                            Button("Select Favorites", action: {
-                ////                                // Perform an action for selecting favorites
-                ////                            })
-//                        } label: {
-//                            Image(systemName: "ellipsis.circle")
-//                                .font(.system(size: 24))
-//                                .foregroundColor(.primary)
-//                        }
-//                    }
-//                }
                 .navigationDestination(isPresented: $isHomeActive) {
                     HomeView()
                 }
 
                 .refreshable {
-                    do {
-                        try await gaugingStationsList.fetchData()
-                        errorMessage = "Failed to fetch data. Please try again later."
-                        showingAlert = true
-
-                    } catch {
-                        print("Fetching failed")
-                    }
+                    await fetchData()
                 }
                 .task {
                     if gaugingStationsList.count == 0 {
-                        do {
-                            try await gaugingStationsList.fetchData()
-                        } catch {
-                            errorMessage = "Failed to fetch data. Please try again later. (\(error)"
-                            showingAlert = true
-
-                            print("Fetching failed")
-                        }
+                        await fetchData()
                     } else {
                         print("there is already data in it")
                     }
